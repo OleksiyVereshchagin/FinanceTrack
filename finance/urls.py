@@ -1,10 +1,6 @@
-from django.contrib.auth.views import LogoutView
-from django.shortcuts import redirect
 from django.urls import path
 from . import views
 from .views import ExpenseAnalysisView
-
-# app_name = 'finance'
 
 urlpatterns = [
     path('transactions/', views.transaction_list, name='transaction'),
@@ -15,6 +11,5 @@ urlpatterns = [
     path('ajax/get_categories/', views.get_categories_by_type, name='get_categories_by_type'),
     path('analytics/', ExpenseAnalysisView.as_view(), name='analytics'),
     path('goals/add/', views.add_goal_view, name='add_goal'),
-    # path('recommendations/', views.recommendations_view, name='recommendations'),
     path('recommendations/', views.expense_analysis, name='recommendations'),
 ]

@@ -1,0 +1,112 @@
+.currency-badge {
+        background: #e2e8f0;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        margin-left: 8px;
+    }
+
+    .forecast-value {
+        font-weight: 600;
+        color: #2b6cb0;
+    }
+
+    .finance-content {
+        padding: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .finance-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2d3748;
+        margin: 25px 0 15px;
+    }
+
+    .category-card {
+        background: white;
+        border-radius: 8px;
+        padding: 0;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border: 1px solid #edf2f7;
+    }
+
+    .category-header {
+        padding: 15px;
+        border-bottom: 1px solid #edf2f7;
+        font-weight: 600;
+        color: #2d3748;
+        display: flex;
+        align-items: center;
+    }
+
+    .category-content {
+        display: flex;
+        padding: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .category-content {
+            flex-direction: column;
+        }
+    }
+
+    .chart-container {
+        flex: 2;
+        min-height: 200px;
+        position: relative;
+    }
+
+    .data-table {
+        flex: 1;
+        margin-left: 20px;
+    }
+
+    .data-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table th, .data-table td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid #edf2f7;
+    }
+
+    .data-table th {
+        font-weight: 500;
+        color: #4a5568;
+        white-space: nowrap;
+    }
+
+    .recommendation {
+        padding: 15px;
+        background: #f8fafc;
+        border-top: 1px solid #edf2f7;
+        font-size: 14px;
+        color: #4a5568;
+    }
+
+    .values-list {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .value-item {
+        display: inline-block;
+        min-width: 60px;
+    }

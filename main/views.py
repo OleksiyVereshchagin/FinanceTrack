@@ -1,14 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+
 from finance.models import Account
 from .forms import AccountForm
-from django.http import HttpResponse
 
 
-# Create your views here.
 
 # 1. Перегляд списку рахунків
 @login_required

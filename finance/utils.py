@@ -1,5 +1,3 @@
-# finance/utils.py
-
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.db.models.functions import TruncMonth

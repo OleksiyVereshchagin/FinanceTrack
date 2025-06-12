@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (closeBtn) {
             closeBtn.addEventListener("click", () => {
               modalContainer.style.display = "none";
-              modalContainer.innerHTML = ""; // очищення вмісту
+              modalContainer.innerHTML = "";
             });
           }
         });

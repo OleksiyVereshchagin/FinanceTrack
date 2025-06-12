@@ -1,16 +1,10 @@
-from django.db import models
+from django import forms
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F
-from django.utils.functional import cached_property
 from django.utils import timezone
-from django.db import models
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.db import models
-from django import forms
-from django.utils import timezone
-from django.core.validators import MinValueValidator
+
 
 
 class Account(models.Model):
@@ -214,91 +208,3 @@ class GoalForm(forms.ModelForm):
                 self.add_error('end_date', "Дата завершення не може бути в минулому")
 
         return cleaned_data
-
-
-#
-# class Goal(models.Model):
-#     GOAL_TYPES = [
-#         ('saving', 'Накопичення'),
-#         ('limit', 'Ліміт витрат'),
-#         ('reduce', 'Зменшення витрат'),
-#     ]
-#
-#     STATUS_CHOICES = [
-#         ('in_progress', 'В процесі'),
-#         ('completed', 'Досягнуто'),
-#         ('expired', 'Не досягнуто вчасно'),
-#     ]
-#
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     type = models.CharField(max_length=10, choices=GOAL_TYPES)
-#     title = models.CharField(max_length=100)
-#     description = models.TextField(blank=True)
-#
-#     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
-#
-#     target_amount = models.DecimalField(max_digits=12, decimal_places=2)
-#     current_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-#
-#     start_date = models.DateField()
-#     end_date = models.DateField()
-#
-#     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='in_progress')
-#
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#     def __str__(self):
-#         return f"{self.title} ({self.get_type_display()})"
-#
-#     def clean(self):
-#         if self.type in ['limit', 'reduce'] and not self.category:
-#             raise ValidationError("Для типів 'Ліміт' або 'Зменшення' потрібно обрати категорію.")
-#         if self.type == 'saving' and self.category:
-#             raise ValidationError("Для типу 'Накопичення' не потрібно вказувати категорію.")
-#
-#     def progress_percent(self):
-#         if self.target_amount == 0:
-#             return 0
-#         progress = (self.current_amount / self.target_amount) * 100
-#         return min(round(progress, 2), 100)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class Transaction(models.Model):
-#     TRANSACTION_TYPES = (
-#         ('income', 'Доходи'),
-#         ('expense', 'Витрати'),
-#         ('transfer', 'Переказ'),
-#     )
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     type = models.CharField(max_length=8, choices=TRANSACTION_TYPES)
-#     title = models.CharField(max_length=255)
-#     amount = models.DecimalField(max_digits=12, decimal_places=2)
-#     date = models.DateField(default=timezone.now)
-#
-#     # Для income/expense
-#     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='transactions', null=True, blank=True)
-#     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
-#
-#     # Для transfer
-#     source_account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True, related_name='outgoing_transfers')
-#     target_account = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True, related_name='incoming_transfers')
-#
-#     def __str__(self):
-#         return f"{self.title} - {self.amount} {self.type}"
-#

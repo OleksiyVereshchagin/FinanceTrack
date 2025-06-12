@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, redirect
 from django.views.decorators.cache import never_cache
 
 from users.forms import CustomUserCreationForm
@@ -23,21 +22,6 @@ def login_view(request):
 
     return render(request, 'users/login.html', {'form': form})
 
-# @never_cache
-# def register_view(request):
-#     if request.user.is_authenticated:
-#         return redirect('home')
-#
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)  # Автоматично залогінити користувача
-#             return redirect('home')  # Перенаправлення на головну сторінку
-#     else:
-#         form = UserCreationForm()
-#
-#     return render(request, 'users/register.html', {'form': form})
 
 @never_cache
 def register_view(request):
