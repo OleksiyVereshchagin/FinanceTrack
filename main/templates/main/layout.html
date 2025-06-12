@@ -1,0 +1,152 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Особисті фінанси{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  {% block extra_css %}
+    <link rel="stylesheet" href="{% static 'main/css/modal.css' %}">
+  {% endblock %}
+</head>
+<body>
+  <div id="modal-container" style="display: none;"></div>
+  <div class="container">
+      <header class="header">
+          <div class="header-content">
+            <a href="{% url 'home' %}" class="brand-name">FinanceTrack</a>
+            <div class="navbar-right">
+            <span class="username">
+              {{ user.email|slice:":3" }}***@***
+            </span>
+              <div class="profile-menu">
+                <i class="fa-solid fa-user-circle"></i>
+                <a href="{% url 'logout' %}" class="logout-btn">Вийти</a>
+              </div>
+            </div>
+          </div>
+    </header>
+
+    <div class="main-layout">
+      <aside class="sidebar">
+        <nav>
+          <ul>
+            <li><a href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Головна</a></li>
+            <li><a href="{% url 'transaction' %}"><i class="fa-solid fa-plus"></i> Транзакції</a></li>
+            <li><a href="{% url 'analytics' %}"><i class="fa-solid fa-chart-line"></i> Аналітика</a></li>
+            <li><a href="{% url 'recommendations' %}"><i class="fa-solid fa-bullseye"></i> Рекомендації</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        {% block content %}
+        <!-- Контент -->
+        {% endblock %}
+      </main>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-content">
+        © 2025 FinanceTrack
+      </div>
+    </footer>
+  </div>
+
+  {% block extra_js %}
+    <script src="{% static 'main/js/modal.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  {% endblock %}
+
+</body>
+</html>
+
+
+
+
+{##}
+{#{% load static %}#}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="uk">#}
+{#<head>#}
+{#  <meta charset="UTF-8" />#}
+{#  <title>{% block title %}Особисті фінанси{% endblock %}</title>#}
+{#  <link rel="stylesheet" href="{% static 'main/css/style.css' %}">#}
+{#  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />#}
+{#  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">#}
+{#  {% block extra_css %}{% endblock %}#}
+{##}
+{##}
+{#</head>#}
+{#<body>#}
+{#  <div id="modal-container" style="display: none;"></div>#}
+{#  <div class="container">#}
+{#      <header class="header">#}
+{#          <div class="header-content">#}
+{#            <a href="{% url 'home' %}" class="brand-name">FinanceTrack</a>#}
+{#            <div class="navbar-right">#}
+{#              <span class="username">{{ user.email }}</span>#}
+{#              <div class="profile-menu">#}
+{#                <i class="fa-solid fa-user-circle"></i>#}
+{#                <a href="{% url 'logout' %}" class="logout-btn">Вийти</a>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#    </header>#}
+{##}
+{#    <div class="main-layout">#}
+{#      <aside class="sidebar">#}
+{#        <nav>#}
+{#          <ul>#}
+{#            <li><a href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Головна</a></li>#}
+{#            <li><a href="{% url 'transaction' %}"><i class="fa-solid fa-plus"></i> Додати транзакцію</a></li>#}
+{#            <li><a href="{% url 'analytics' %}"><i class="fa-solid fa-chart-line"></i> Аналітика</a></li>#}
+{#            <li><a href="{% url 'recommendations' %}"><i class="fa-solid fa-bullseye"></i> Рекомендації та цілі</a></li>#}
+{#          </ul>#}
+{#        </nav>#}
+{#      </aside>#}
+{##}
+{#      <main class="content">#}
+{#        {% block content %}#}
+{#        <!-- Контент -->#}
+{#        {% endblock %}#}
+{#      </main>#}
+{#    </div>#}
+{##}
+{#    <footer class="footer">#}
+{#      <div class="footer-content">#}
+{#        © 2025 FinanceTrack#}
+{#      </div>#}
+{#    </footer>#}
+{#  </div>#}
+{##}
+{#  {% block extra_js %}#}
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>#}
+{#    <script src="{% static 'js/modal.js' %}"></script>#}
+{#  {% endblock %}#}
+{##}
+{#    <!-- Універсальне модальне вікно для видалення -->#}
+{#  <!-- templates/main/includes/modal.html -->#}
+{#    <div id="deleteModal" class="modal" style="display: none;">#}
+{#      <div class="modal-content">#}
+{#        <h3 class="modal-title" id="modalDeleteTitle">Підтвердження видалення</h3>#}
+{#        <p class="modal-text" id="modalDeleteText"></p>#}
+{##}
+{#        <div class="modal-buttons">#}
+{#          <form id="deleteForm" method="post" class="modal-form">#}
+{#            {% csrf_token %}#}
+{#            <button type="submit" class="btn-confirm">Так, видалити</button>#}
+{#          </form>#}
+{#          <button type="button" onclick="closeModal()" class="btn-cancel">Скасувати</button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  #}
+{#    <link rel="stylesheet" href="{% static 'main/css/modal.css' %}">#}
+{#    <script src="{% static 'main/js/modal.js' %}"></script>#}
+{#</body>#}
+{#</html>#}

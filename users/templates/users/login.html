@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вхід | FinanceTrack</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="left-panel">
+            <div class="logo">FinanceTrack</div>
+        </div>
+        <div class="right-panel">
+            <h2>Вхід до акаунту</h2>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group{% if field.errors %} has-error{% endif %}">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error-message">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="form-footer">
+                    <a href="{% url 'register' %}">Зареєструватись</a>
+                    <button type="submit">Увійти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

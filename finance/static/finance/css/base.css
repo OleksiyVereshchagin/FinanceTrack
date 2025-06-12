@@ -1,0 +1,201 @@
+/*.analysis-container {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    gap: 2rem;*/
+/*}*/
+
+/*.filter-form {*/
+/*    background: #fff;*/
+/*    padding: 1.5rem;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);*/
+/*}*/
+
+/*.form-row {*/
+/*    display: flex;*/
+/*    gap: 1rem;*/
+/*    margin-bottom: 1rem;*/
+/*    align-items: flex-end;*/
+/*}*/
+
+/*.form-group {*/
+/*    flex: 1;*/
+/*}*/
+
+/*.form-group label {*/
+/*    display: block;*/
+/*    margin-bottom: 0.5rem;*/
+/*    font-weight: 500;*/
+/*}*/
+
+/*.form-control {*/
+/*    width: 100%;*/
+/*    padding: 0.5rem;*/
+/*    border: 1px solid #ddd;*/
+/*    border-radius: 6px;*/
+/*}*/
+
+/*.btn-apply {*/
+/*    background-color: #C1E6CB;*/
+/*    color: #000;*/
+/*    border: none;*/
+/*    padding: 0.5rem 1rem;*/
+/*    border-radius: 6px;*/
+/*    cursor: pointer;*/
+/*    font-weight: 500;*/
+/*}*/
+
+/* Основні контейнери */
+.analysis-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Стилі форми фільтрації */
+.filter-form {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: flex-end;
+}
+
+.form-group {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.btn-apply {
+    background-color: #C1E6CB;
+    color: #000;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Контейнери для статистики */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.stat-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.stat-label {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* У base.css додаємо мінімальні зміни для підтримки 2 рядів карток */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Додаємо в кінець файлу */
+.negative-balance {
+    color: #e74c3c;  /* Червоний для негативного балансу */
+}
+
+.positive-balance {
+    color: #2ecc71;  /* Зелений для позитивного балансу */
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    /* Додаємо transition для плавної зміни кольору */
+    transition: color 0.3s ease;
+}
+
+/*інт система*/
+
+.advice-block {
+    background-color: #E5F6EB; /* світліше за #C1E6CB */
+    /*border-left: 4px solid #A5D6B0;*/
+    border-left: 4px solid #C1E6CBFF;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.advice-block h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #2A3D2E;
+    font-weight: 600;
+}
+
+.advice-block ul {
+    list-style: none; /* прибирає крапки */
+    padding-left: 0;
+    margin: 0;
+}
+
+.advice-block li {
+    position: relative;
+    padding-left: 1.8rem;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    color: #2E4632;
+}
+
+/*.advice-block li::before {*/
+/*    !*content: "💬";*!*/
+/*    position: absolute;*/
+/*    left: 0;*/
+/*    top: 0.05rem;*/
+/*    font-size: 1.1rem;*/
+/*}*/
+
+.no-data-msg {
+    color: #b33a3a;            /* Темно-червоний колір для акценту */
+    background-color: #fdecea; /* Світло-рожевий фон для виділення */
+    border: 1px solid #f5c6cb; /* Легка рамка */
+    padding: 15px 20px;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(179, 58, 58, 0.3);
+}

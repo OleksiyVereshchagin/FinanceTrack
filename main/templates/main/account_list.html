@@ -1,0 +1,103 @@
+{% extends "main/layout.html" %}
+
+{% block content %}
+  <div class="accounts-header">
+    <h1>Мої рахунки</h1>
+    <a href="{% url 'account_create' %}" class="btn btn-add-account">Додати рахунок</a>
+
+  </div>
+
+  {% if accounts %}
+    <div class="table-container">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Назва рахунку</th>
+            <th>Баланс</th>
+            <th>Валюта</th>
+            <th>Дії</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for account in accounts %}
+            <tr>
+              <td>{{ account.name }}</td>
+              <td>{{ account.balance }}</td>
+              <td>{{ account.currency }}</td>
+              <td class="table-actions">
+                <a href="{% url 'account_edit' account.pk %}">Редагувати</a>
+                <a href="#"
+                   onclick="showDeleteModal('Підтвердження видалення', 'Ви впевнені, що хочете видалити рахунок <strong>{{ account.name }}</strong>?', '{% url 'account_delete' account.id %}')"
+                   class="delete-link">
+                   Видалити
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="empty-message">У вас ще немає жодного рахунку.</p>
+  {% endif %}
+        <!-- Універсальне модальне вікно для видалення -->
+  <div id="deleteModal" class="modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="modal-content">
+      <h3 class="modal-title" id="modalDeleteTitle">Підтвердження видалення</h3>
+      <p class="modal-text" id="modalDeleteText"></p>
+
+      <div class="modal-buttons">
+        <form id="deleteForm" method="post" class="modal-form">
+          {% csrf_token %}
+          <button type="submit" class="btn-confirm">Так, видалити</button>
+        </form>
+        <button type="button" onclick="closeModal()" class="btn-cancel">Скасувати</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+
+
+
+
+
+
+{#{% block title %}Список рахунків{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#  <h1>Мої рахунки</h1>#}
+{##}
+{#  <div style="margin-bottom: 1rem;">#}
+{#    <a href="{% url 'account_create' %}" class="btn btn-primary">Додати рахунок</a>#}
+{#  </div>#}
+{##}
+{#  {% if accounts %}#}
+{#    <table class="table">#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>Назва рахунку</th>#}
+{#          <th>Баланс</th>#}
+{#          <th>Валюта</th>#}
+{#          <th>Дії</th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#        {% for account in accounts %}#}
+{#          <tr>#}
+{#            <td>{{ account.name }}</td>#}
+{#            <td>{{ account.balance }}</td>#}
+{#            <td>{{ account.currency }}</td>#}
+{#            <td>#}
+{#              <a href="{% url 'account_edit' account.pk %}">Редагувати</a> |#}
+{#              <a href="{% url 'account_delete' account.pk %}">Видалити</a>#}
+{#            </td>#}
+{#          </tr>#}
+{#        {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+{#  {% else %}#}
+{#    <p>У вас ще немає жодного рахунку.</p>#}
+{#  {% endif %}#}
+{#{% endblock %}#}

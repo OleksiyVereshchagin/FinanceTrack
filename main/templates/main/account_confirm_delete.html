@@ -1,0 +1,31 @@
+{#{% extends "main/layout.html" %}#}
+{##}
+{#{% block title %}Видалення рахунку{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#  <h1>Підтвердження видалення</h1>#}
+{#  <p>Ви впевнені, що хочете видалити рахунок <strong>{{ account.name }}</strong>?</p>#}
+{##}
+{#  <form method="post">#}
+{#    {% csrf_token %}#}
+{#    <button type="submit" class="btn btn-danger">Так, видалити</button>#}
+{#    <a href="{% url 'home' %}" class="btn btn-secondary">Скасувати</a>#}
+{#  </form>#}
+{#{% endblock %}#}
+
+
+{% extends "main/layout.html" %}
+
+{% block title %}Видалення рахунку{% endblock %}
+
+{% block content %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  showDeleteModal(
+    'Підтвердження видалення',
+    'Ви впевнені, що хочете видалити рахунок <strong>{{ account.name }}</strong>?',
+    '{% url 'accounts_delete' account.id %}'
+  );
+});
+</script>
+{% endblock %}

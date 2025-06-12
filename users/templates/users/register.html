@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="left-panel">
+            FinanceTrack
+        </div>
+        <div class="right-panel">
+            <h2>Реєстрація</h2>
+            <form method="post" autocomplete="off">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <div class="error-message">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit">Зареєструватися</button>
+                <div class="form-footer">
+                    <a href="{% url 'login' %}">Вже маєте акаунт?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

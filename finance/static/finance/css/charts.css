@@ -1,0 +1,133 @@
+/*.charts-container {*/
+/*    display: grid;*/
+/*    grid-template-columns: 1fr 1fr;*/
+/*    gap: 1.5rem;*/
+/*}*/
+
+/*.chart-card {*/
+/*    background: #fff;*/
+/*    padding: 1.5rem;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);*/
+/*}*/
+
+/*.chart-title {*/
+/*    margin-bottom: 1rem;*/
+/*    font-size: 1.2rem;*/
+/*    font-weight: 600;*/
+/*}*/
+
+/*.stats-container {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(3, 1fr);*/
+/*    gap: 1.5rem;*/
+/*    margin-top: 1.5rem;*/
+/*}*/
+
+/*.stat-card {*/
+/*    background: #fff;*/
+/*    padding: 1.5rem;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);*/
+/*}*/
+
+/*.stat-value {*/
+/*    font-size: 1.5rem;*/
+/*    font-weight: 600;*/
+/*    color: #2c3e50;*/
+/*}*/
+
+/*.stat-label {*/
+/*    color: #7f8c8d;*/
+/*    font-size: 0.9rem;*/
+/*}*/
+
+/*.chart-container {*/
+/*    position: relative;*/
+/*    height: 400px;  !* Фіксована висота *!*/
+/*    width: 100%;*/
+/*}*/
+
+/*.chart-card {*/
+/*    height: 100%;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
+
+/*.chart-title {*/
+/*    margin-bottom: 1rem;*/
+/*}*/
+
+/*.chart-wrapper {*/
+/*    flex-grow: 1;*/
+/*    min-height: 0;  !* Важливо для правильного масштабування *!*/
+/*}*/
+
+
+/* Основний контейнер для графіків */
+.charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Картка графіка */
+.chart-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Заголовок графіка */
+.chart-title {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Контейнер для canvas */
+.chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+}
+
+/* Обгортка для масштабування */
+.chart-wrapper {
+    flex-grow: 1;
+    min-height: 0;  /* Критично важливо для правильного масштабування */
+}
+
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.chart-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+#balanceTimelineChart {
+    max-height: 400px;
+    width: 100%;
+}

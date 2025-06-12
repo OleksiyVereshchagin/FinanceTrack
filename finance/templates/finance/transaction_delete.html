@@ -1,0 +1,15 @@
+{% extends "main/layout.html" %}
+
+{% block title %}Видалення транзакції{% endblock %}
+
+{% block content %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  showDeleteModal(
+    'Підтвердження видалення',
+    'Ви впевнені, що хочете видалити транзакцію <strong>{{ transaction.title }}</strong> на суму {{ transaction.amount }} грн?',
+    '{% url 'transaction_delete' transaction.id %}'
+  );
+});
+</script>
+{% endblock %}

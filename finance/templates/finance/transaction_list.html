@@ -1,0 +1,135 @@
+{% extends "main/layout.html" %}
+{% load static %}
+
+{% block title %}Мої транзакції{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'finance/css/transactions_list.css' %}">
+  <link rel="stylesheet" href="{% static 'finance/css/modal.css' %}">
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'finance/js/transactions_modal.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="transactions-header">
+  <h2>Мої транзакції</h2>
+  <a href="{% url 'transaction_create' %}" class="btn-add-transaction">Додати транзакцію</a>
+</div>
+
+<!-- Модальне вікно підтвердження видалення -->
+<div id="deleteModal" class="modal" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <h3 class="modal-title">Підтвердження видалення</h3>
+    <p class="modal-text">
+      Ви впевнені, що хочете видалити транзакцію <strong id="transactionName"></strong> на суму <span id="transactionAmount"></span> грн?
+    </p>
+    <div class="modal-buttons">
+      <form id="deleteForm" method="post" class="modal-form">
+        {% csrf_token %}
+        <button type="submit" class="btn-confirm">Так, видалити</button>
+      </form>
+      <button type="button" onclick="hideDeleteModal()" class="btn-cancel">Скасувати</button>
+    </div>
+  </div>
+</div>
+
+<form method="get" class="filter-form">
+  <select name="account" id="account">
+    <option value="">Усі рахунки</option>
+    {% for account in user_accounts %}
+      <option value="{{ account.id }}" {% if request.GET.account == account.id|stringformat:"s" %}selected{% endif %}>
+        {{ account.name }} ({{ account.currency }})
+      </option>
+    {% endfor %}
+  </select>
+
+  <select name="category" id="category">
+    <option value="">Усі категорії</option>
+    {% for category in categories %}
+      <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+        {{ category.name }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <button type="submit">Фільтрувати</button>
+  <a href="{% url 'transaction' %}">Скинути</a>
+</form>
+
+{% if transactions %}
+<div class="table-container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Назва</th>
+        <th>
+          <a href="?sort=amount&direction={% if current_sort == 'amount' and current_direction == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.account %}&account={{ request.GET.account }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+            Сума {% if current_sort == 'amount' %}{% if current_direction == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="?sort=type&direction={% if current_sort == 'type' and current_direction == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.account %}&account={{ request.GET.account }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+            Тип {% if current_sort == 'type' %}{% if current_direction == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="?sort=category__name&direction={% if current_sort == 'category__name' and current_direction == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.account %}&account={{ request.GET.account }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+            Категорія {% if current_sort == 'category__name' %}{% if current_direction == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="?sort=date&direction={% if current_sort == 'date' and current_direction == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.account %}&account={{ request.GET.account }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+            Дата {% if current_sort == 'date' %}{% if current_direction == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
+          </a>
+        </th>
+        <th>
+          <a href="?sort=account&direction={% if current_sort == 'account' and current_direction == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.account %}&account={{ request.GET.account }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+            Рахунок {% if current_sort == 'account' %}{% if current_direction == 'asc' %}▲{% else %}▼{% endif %}{% endif %}
+          </a>
+        </th>
+        <th>Дії</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+      <tr>
+        <td>{{ transaction.title }}</td>
+        <td>{{ transaction.amount }}</td>
+        <td>
+          {% if transaction.type == 'income' %}
+            <span class="transaction-icon income-icon">↑</span> {{ transaction.get_type_display }}
+          {% elif transaction.type == 'expense' %}
+            <span class="transaction-icon expense-icon">↓</span> {{ transaction.get_type_display }}
+          {% elif transaction.type == 'transfer' %}
+            <span class="transaction-icon transfer-icon">↻</span> {{ transaction.get_type_display }}
+          {% endif %}
+        </td>
+        <td>{% if transaction.category %}{{ transaction.category.name }}{% else %}-{% endif %}</td>
+        <td>{{ transaction.date }}</td>
+        <td>
+          {% if transaction.account %}
+            {{ transaction.account.name }}
+          {% elif transaction.source_account and transaction.target_account %}
+            {{ transaction.source_account.name }} → {{ transaction.target_account.name }}
+          {% endif %}
+        </td>
+        <td class="table-actions">
+            <a href="{% url 'transaction_edit' transaction.id %}">Редагувати</a>
+            <a href="#"
+               onclick="showDeleteModal('{{ transaction.title }}', '{{ transaction.amount }}', '{% url 'transaction_delete' transaction.id %}', '{{ csrf_token }}')"
+               class="delete-link">
+               Видалити
+            </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="empty-message">У вас ще немає транзакцій.</p>
+{% endif %}
+{% endblock %}

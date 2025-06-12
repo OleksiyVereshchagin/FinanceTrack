@@ -1,0 +1,191 @@
+/* Основні кольори */
+:root {
+    --green: #C1E6CB;
+    --dark: #212529;
+    --light: #ffffff;
+    --error: #ff4d4f;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--light);
+    color: var(--dark);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Контейнер */
+.auth-container {
+    display: flex;
+    width: 90%;
+    max-width: 1000px;
+    height: 600px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Ліва панель */
+.left-panel {
+    flex: 1;
+    background: linear-gradient(135deg, #C1E6CB 0%, #6BA98C 50%, #212529 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--light);
+    font-size: 2rem;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+}
+
+.left-panel::before {
+    content: "";
+    position: absolute;
+    width: 140%;
+    height: 140%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    animation: rotateGlow 10s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotateGlow {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+.left-panel > * {
+    z-index: 1;
+}
+
+/* Права панель */
+.right-panel {
+    flex: 1;
+    padding: 60px 40px;
+    background-color: #ecf5ef;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right-panel h2 {
+    margin-bottom: 30px;
+    font-size: 24px;
+    text-align: left;
+    color: var(--dark);
+}
+
+/* Форма */
+form .form-group {
+    margin-bottom: 20px;
+    transition: all 0.2s ease-in-out;
+}
+
+form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+form input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--dark);
+    border-radius: 6px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+form input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 4px var(--green);
+}
+
+/* Помилки */
+.has-error input {
+    border-color: var(--error);
+}
+
+.error-message {
+    color: var(--error);
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+/* Нижній блок */
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-footer a {
+    font-size: 0.9rem;
+    color: var(--dark);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.form-footer a:hover {
+    color: var(--green);
+}
+
+button {
+    padding: 10px 20px;
+    background-color: var(--dark);
+    color: var(--light);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--green);
+    color: var(--dark);
+}
+
+.bottom-link {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.bottom-link a {
+    color: var(--dark);
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+.bottom-link a:hover {
+    color: var(--green);
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .left-panel {
+        height: 150px;
+        font-size: 1.5rem;
+    }
+
+    .right-panel {
+        padding: 30px 20px;
+    }
+}

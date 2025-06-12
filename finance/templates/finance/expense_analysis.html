@@ -1,0 +1,628 @@
+{##}
+{#{% extends 'main/layout.html' %}#}
+{#{% load static %}#}
+{##}
+{#{% block title %}Аналіз витрат{% endblock %}#}
+{##}
+{#{% block extra_css %}#}
+{#    <link rel="stylesheet" href="{% static 'finance/css/base.css' %}">#}
+{#    <link rel="stylesheet" href="{% static 'finance/css/charts.css' %}">#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#<div class="analysis-container">#}
+{##}
+{#    <div class="filter-form">#}
+{#        <form method="get">#}
+{#            <div class="form-row">#}
+{#                <div class="form-group">#}
+{#                    <label for="id_account">Рахунок</label>#}
+{#                    {{ form.account }}#}
+{#                </div>#}
+{##}
+{#                <div class="form-group">#}
+{#                    <label for="id_period">Період</label>#}
+{#                    {{ form.period }}#}
+{#                </div>#}
+{##}
+{#                <div class="form-group" id="custom-dates" style="display: none;">#}
+{#                    <label for="id_start_date">З</label>#}
+{#                    {{ form.start_date }}#}
+{#                </div>#}
+{##}
+{#                <div class="form-group" id="custom-dates-end" style="display: none;">#}
+{#                    <label for="id_end_date">По</label>#}
+{#                    {{ form.end_date }}#}
+{#                </div>#}
+{##}
+{#                <button type="submit" class="btn-apply">Застосувати</button>#}
+{#            </div>#}
+{#        </form>#}
+{#    </div>#}
+{##}
+{#    {% if request.GET %}#}
+{#        {% if not_enough_data %}#}
+{#            <p class="no-data-msg">#}
+{#                Недостатньо даних для аналізу. Додайте ще транзакції або оберіть інший період,#}
+{#                щоб отримати статистику та персональні поради.#}
+{#            </p>#}
+{#        {% else %}#}
+{##}
+{#            {% if advice %}#}
+{#                <div class="advice-block">#}
+{#                    <h2>💡 Персональні поради</h2>#}
+{#                    <ul>#}
+{#                        {% for item in advice %}#}
+{#                            <li>{{ item }}</li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                </div>#}
+{#            {% elif short_period %}#}
+{#                <p class="info-msg">#}
+{#                    Період аналізу занадто короткий. Деякі поради можуть бути недоступні.#}
+{#                </p>#}
+{#            {% endif %}#}
+{##}
+{#            {% if no_expenses %}#}
+{#                <div class="empty-message">Немає витрат за обраний період.</div>#}
+{#            {% else %}#}
+{#                <div class="stats-container">#}
+{#                    <div class="stat-card">#}
+{#                        <div class="stat-value">{{ total_expenses|default:"0" }} ₴</div>#}
+{#                        <div class="stat-label">Загальні витрати</div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="stat-card">#}
+{#                        <div class="stat-value">{{ avg_per_day|default:"0" }} ₴</div>#}
+{#                        <div class="stat-label">Середнє значення витрат за день</div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="stat-card">#}
+{#                        <div class="stat-value">{{ top_category.category__name|default:"-" }}</div>#}
+{#                        <div class="stat-label">Найбільша категорія витрат</div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="stat-card">#}
+{#                        <div class="stat-value">{{ total_income|default:"0" }} ₴</div>#}
+{#                        <div class="stat-label">Загальні доходи</div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="stat-card">#}
+{#                        <div class="stat-value">{{ transaction_count|default:"0" }}</div>#}
+{#                        <div class="stat-label">Кількість транзакцій</div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="stat-card">#}
+{#                        <div class="stat-value {% if balance < 0 %}negative-balance{% else %}positive-balance{% endif %}">#}
+{#                            {{ balance|default:"0" }} ₴#}
+{#                        </div>#}
+{#                        <div class="stat-label">Баланс</div>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#                <div class="charts-container">#}
+{#                    <div class="chart-card">#}
+{#                        <h3 class="chart-title">Витрати по категоріям</h3>#}
+{#                        <div class="chart-wrapper">#}
+{#                            <div class="chart-container">#}
+{#                                <canvas id="categoryChart"></canvas>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="chart-card">#}
+{#                        <h3 class="chart-title">Доходи та витрати за часом</h3>#}
+{#                        <div class="chart-wrapper">#}
+{#                            <div class="chart-container">#}
+{#                                <canvas id="incomeExpenseChart"></canvas>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="chart-card">#}
+{#                        <h3 class="chart-title">Середні витрати по категоріях</h3>#}
+{#                        <div class="chart-wrapper">#}
+{#                            <div class="chart-container">#}
+{#                                <canvas id="avgCategoryChart"></canvas>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="chart-card">#}
+{#                        <h3 class="chart-title">Кількість витрат по категоріях</h3>#}
+{#                        <div class="chart-wrapper">#}
+{#                            <div class="chart-container">#}
+{#                                <canvas id="countCategoryChart"></canvas>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% endif %}#}
+{##}
+{#        {% endif %}#}
+{#    {% endif %}#}
+{##}
+{#</div>#}
+{#{% endblock %}#}
+{##}
+{#{% block extra_js %}#}
+{#<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>#}
+{##}
+{#<script>#}
+{#    document.addEventListener('DOMContentLoaded', function () {#}
+{#        const periodSelect = document.getElementById('id_period');#}
+{#        const customDates = document.getElementById('custom-dates');#}
+{#        const customDatesEnd = document.getElementById('custom-dates-end');#}
+{##}
+{#        function toggleDateFields() {#}
+{#            const isCustom = periodSelect.value === 'custom';#}
+{#            customDates.style.display = isCustom ? 'block' : 'none';#}
+{#            customDatesEnd.style.display = isCustom ? 'block' : 'none';#}
+{#        }#}
+{##}
+{#        periodSelect.addEventListener('change', toggleDateFields);#}
+{#        toggleDateFields();#}
+{#    });#}
+{##}
+{#    new Chart(document.getElementById('categoryChart'), {#}
+{#        type: 'doughnut',#}
+{#        data: {#}
+{#            labels: [{% for item in by_category %}"{{ item.category__name }}",{% endfor %}],#}
+{#            datasets: [{#}
+{#                data: [{% for item in by_category %}{{ item.total }},{% endfor %}],#}
+{#                backgroundColor: [#}
+{#                    '#C1E6CB','#A8D8EA','#F8B195','#F6D186','#FFDAC1','#B5EAD7','#C7CEEA','#FFD3B6',#}
+{#                    '#E2F0CB','#FFB7B2','#D5AAFF','#A0CED9','#FFCBC1','#D0E6A5','#B5D8B2'#}
+{#                ]#}
+{#            }]#}
+{#        }#}
+{#    });#}
+{##}
+{#    new Chart(document.getElementById('dailyChart'), {#}
+{#        type: 'line',#}
+{#        data: {#}
+{#            labels: [{% for item in by_day %}"{{ item.date|date:'d.m' }}",{% endfor %}],#}
+{#            datasets: [{#}
+{#                label: 'Витрати',#}
+{#                data: [{% for item in by_day %}{{ item.total }},{% endfor %}],#}
+{#                borderColor: '#D5AAFF',#}
+{#                fill: false#}
+{#            }]#}
+{#        }#}
+{#    });#}
+{##}
+{#    new Chart(document.getElementById('avgCategoryChart'), {#}
+{#    type: 'bar',#}
+{#    data: {#}
+{#        labels: [{% for item in avg_by_category %}"{{ item.category__name }}",{% endfor %}],#}
+{#        datasets: [{#}
+{#            label: 'Середня сума',#}
+{#            data: [{% for item in avg_by_category %}{{ item.avg|floatformat:2 }},{% endfor %}],#}
+{#            backgroundColor: '#A8D8EA'#}
+{#        }]#}
+{#    },#}
+{#    options: {#}
+{#        responsive: true,#}
+{#        plugins: {#}
+{#            legend: { display: false }#}
+{#        },#}
+{#        scales: {#}
+{#            x: {#}
+{#                grid: {#}
+{#                    display: false // 👉 прибрати вертикальні лінії#}
+{#                },#}
+{#                ticks: {#}
+{#                    callback: function(value) {#}
+{#                        let label = this.getLabelForValue(value);#}
+{#                        return label.length > 10 ? label.slice(0, 10) + '…' : label;#}
+{#                    },#}
+{#                    autoSkip: false,#}
+{#                    maxRotation: 30,#}
+{#                    minRotation: 30#}
+{#                }#}
+{#            },#}
+{#            y: {#}
+{#                grid: {#}
+{#                    display: true,// 👉 прибрати горизонтальні лінії#}
+{#                }#}
+{#            }#}
+{#        }#}
+{#    }#}
+{#});#}
+{##}
+{#    new Chart(document.getElementById('countCategoryChart'), {#}
+{#        type: 'bar',#}
+{#        data: {#}
+{#            labels: [{% for item in count_by_category %}"{{ item.category__name }}",{% endfor %}],#}
+{#            datasets: [{#}
+{#                label: 'Кількість транзакцій',#}
+{#                data: [{% for item in count_by_category %}{{ item.count }},{% endfor %}],#}
+{#                backgroundColor: '#F6D186'#}
+{#            }]#}
+{#        },#}
+{#        options: {#}
+{#            responsive: true,#}
+{#            plugins: {#}
+{#                legend: { display: false }#}
+{#            },#}
+{#            scales: {#}
+{#                x: {#}
+{##}
+{#                    ticks: {#}
+{#                        callback: function(value) {#}
+{#                            let label = this.getLabelForValue(value);#}
+{#                            return label.length > 10 ? label.slice(0, 10) + '…' : label;#}
+{#                        },#}
+{#                        autoSkip: false,#}
+{#                        maxRotation: 30,#}
+{#                        minRotation: 30#}
+{#                    }#}
+{#                }#}
+{#            }#}
+{#        }#}
+{#    });#}
+{##}
+{#    new Chart(document.getElementById('incomeExpenseChart'), {#}
+{#       type: 'line',#}
+{#       data: {#}
+{#           labels: [{% for item in expenses_by_day %}"{{ item.date|date:'d.m.y' }}",{% endfor %}],#}
+{#           datasets: [#}
+{#               {#}
+{#                   label: 'Витрати',#}
+{#                   data: [{% for item in expenses_by_day %}{{ item.total }},{% endfor %}],#}
+{#                   borderColor: '#FF6B6B',#}
+{#                   backgroundColor: 'rgba(255, 107, 107, 0.2)',#}
+{#                   fill: true#}
+{#               },#}
+{#               {#}
+{#                   label: 'Доходи',#}
+{#                   data: [{% for item in incomes_by_day %}{{ item.total }},{% endfor %}],#}
+{#                   borderColor: '#4ECDC4',#}
+{#                   backgroundColor: 'rgba(78, 205, 196, 0.2)',#}
+{#                   fill: true#}
+{#               }#}
+{#           ]#}
+{#       },#}
+{#       options: {#}
+{#           responsive: true,#}
+{#           plugins: {#}
+{#               title: {#}
+{#                   display: true,#}
+{#                   text: 'Динаміка доходів та витрат'#}
+{#               }#}
+{#           },#}
+{#           scales: {#}
+{#               x: {#}
+{#                   title: {#}
+{#                       display: true,#}
+{#                   }#}
+{#               },#}
+{#               y: {#}
+{#                   title: {#}
+{#                       display: true,#}
+{#                   }#}
+{#               }#}
+{#           }#}
+{#       }#}
+{#    });#}
+{##}
+{#</script>#}
+{#{% endblock %}#}
+
+
+{#----------------------------------------------------------------------------------------------#}
+
+
+{% extends 'main/layout.html' %}
+{% load static %}
+
+{% block title %}Аналіз витрат{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'finance/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'finance/css/charts.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="analysis-container">
+
+    <div class="filter-form">
+        <form method="get">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_account">Рахунок</label>
+                    {{ form.account }}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_period">Період</label>
+                    {{ form.period }}
+                </div>
+
+                <div class="form-group" id="custom-dates" style="display: none;">
+                    <label for="id_start_date">З</label>
+                    {{ form.start_date }}
+                </div>
+
+                <div class="form-group" id="custom-dates-end" style="display: none;">
+                    <label for="id_end_date">По</label>
+                    {{ form.end_date }}
+                </div>
+
+                <button type="submit" class="btn-apply">Застосувати</button>
+            </div>
+        </form>
+    </div>
+
+    {% if request.GET %}
+        {% if not_enough_data %}
+            <p class="no-data-msg">
+                Недостатньо даних для аналізу. Додайте ще транзакції або оберіть інший період,
+                щоб отримати статистику та персональні поради.
+            </p>
+        {% else %}
+
+            {% if advice %}
+                <div class="advice-block">
+                    <h2>💡 Персональні поради</h2>
+                    <ul>
+                        {% for item in advice %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% elif short_period %}
+                <p class="info-msg">
+                    Період аналізу занадто короткий. Деякі поради можуть бути недоступні.
+                </p>
+            {% endif %}
+
+            {% if no_expenses %}
+                <div class="empty-message">Немає витрат за обраний період.</div>
+            {% else %}
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ total_expenses|default:"0" }} ₴</div>
+                        <div class="stat-label">Загальні витрати</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value">{{ avg_per_day|default:"0" }} ₴</div>
+                        <div class="stat-label">Середнє значення витрат за день</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value">{{ top_category.category__name|default:"-" }}</div>
+                        <div class="stat-label">Найбільша категорія витрат</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value">{{ total_income|default:"0" }} ₴</div>
+                        <div class="stat-label">Загальні доходи</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value">{{ transaction_count|default:"0" }}</div>
+                        <div class="stat-label">Кількість транзакцій</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value {% if balance < 0 %}negative-balance{% else %}positive-balance{% endif %}">
+                            {{ balance|default:"0" }} ₴
+                        </div>
+                        <div class="stat-label">Баланс</div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Витрати по категоріям</h3>
+                        <div class="chart-wrapper">
+                            <div class="chart-container">
+                                <canvas id="categoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Доходи та витрати за часом</h3>
+                        <div class="chart-wrapper">
+                            <div class="chart-container">
+                                <canvas id="incomeExpenseChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Середні витрати по категоріях</h3>
+                        <div class="chart-wrapper">
+                            <div class="chart-container">
+                                <canvas id="avgCategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Кількість витрат по категоріях</h3>
+                        <div class="chart-wrapper">
+                            <div class="chart-container">
+                                <canvas id="countCategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        {% endif %}
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const periodSelect = document.getElementById('id_period');
+        const customDates = document.getElementById('custom-dates');
+        const customDatesEnd = document.getElementById('custom-dates-end');
+
+        function toggleDateFields() {
+            const isCustom = periodSelect.value === 'custom';
+            customDates.style.display = isCustom ? 'block' : 'none';
+            customDatesEnd.style.display = isCustom ? 'block' : 'none';
+        }
+
+        periodSelect.addEventListener('change', toggleDateFields);
+        toggleDateFields();
+    });
+
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: {
+            labels: [{% for item in by_category %}"{{ item.category__name }}",{% endfor %}],
+            datasets: [{
+                data: [{% for item in by_category %}{{ item.total }},{% endfor %}],
+                backgroundColor: [
+                    '#C1E6CB','#A8D8EA','#F8B195','#F6D186','#FFDAC1','#B5EAD7','#C7CEEA','#FFD3B6',
+                    '#E2F0CB','#FFB7B2','#D5AAFF','#A0CED9','#FFCBC1','#D0E6A5','#B5D8B2'
+                ]
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('dailyChart'), {
+        type: 'line',
+        data: {
+            labels: [{% for item in by_day %}"{{ item.date|date:'d.m' }}",{% endfor %}],
+            datasets: [{
+                label: 'Витрати',
+                data: [{% for item in by_day %}{{ item.total }},{% endfor %}],
+                borderColor: '#D5AAFF',
+                fill: false
+            }]
+        }
+    });
+
+
+    const rawData = [{% for item in avg_by_category %}{{ item.avg|floatformat:2|stringformat:"s"|cut:"," }},{% endfor %}];
+    const data = rawData.map(value => value / 100);
+
+    new Chart(document.getElementById('avgCategoryChart'), {
+    type: 'bar',
+    data: {
+        labels: [{% for item in avg_by_category %}"{{ item.category__name }}",{% endfor %}],
+        datasets: [{
+            label: 'Середня сума',
+            data: data,
+            backgroundColor: '#A8D8EA'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false // 👉 прибрати вертикальні лінії
+                },
+                ticks: {
+                    callback: function(value) {
+                        let label = this.getLabelForValue(value);
+                        return label.length > 10 ? label.slice(0, 10) + '…' : label;
+                    },
+                    autoSkip: false,
+                    maxRotation: 30,
+                    minRotation: 30
+                }
+            },
+            y: {
+                grid: {
+                    display: true,// 👉 прибрати горизонтальні лінії
+                }
+            }
+        }
+    }
+});
+
+    new Chart(document.getElementById('countCategoryChart'), {
+        type: 'bar',
+        data: {
+            labels: [{% for item in count_by_category %}"{{ item.category__name }}",{% endfor %}],
+            datasets: [{
+                label: 'Кількість транзакцій',
+                data: [{% for item in count_by_category %}{{ item.count }},{% endfor %}],
+                backgroundColor: '#F6D186'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+
+                    ticks: {
+                        callback: function(value) {
+                            let label = this.getLabelForValue(value);
+                            return label.length > 10 ? label.slice(0, 10) + '…' : label;
+                        },
+                        autoSkip: false,
+                        maxRotation: 30,
+                        minRotation: 30
+                    }
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('incomeExpenseChart'), {
+       type: 'line',
+       data: {
+           labels: [{% for item in expenses_by_day %}"{{ item.date|date:'d.m.y' }}",{% endfor %}],
+           datasets: [
+               {
+                   label: 'Витрати',
+                   data: [{% for item in expenses_by_day %}{{ item.total }},{% endfor %}],
+                   borderColor: '#FF6B6B',
+                   backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                   fill: true
+               },
+               {#{#}
+               {#    label: 'Доходи',#}
+               {#    data: [{% for item in incomes_by_day %}{{ item.total }},{% endfor %}],#}
+               {#    borderColor: '#4ECDC4',#}
+               {#    backgroundColor: 'rgba(78, 205, 196, 0.2)',#}
+               {#    fill: true#}
+               {#}#}
+           ]
+       },
+       options: {
+           responsive: true,
+           plugins: {
+               title: {
+                   display: true,
+                   text: 'Динаміка витрат'
+               }
+           },
+           scales: {
+               x: {
+                   title: {
+                       display: true,
+                   }
+               },
+               y: {
+                   title: {
+                       display: true,
+                   }
+               }
+           }
+       }
+    });
+
+</script>
+{% endblock %}
